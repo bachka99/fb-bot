@@ -2,19 +2,23 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-VERIFY_TOKEN = "bachka_token"   
-@app.route("/webhook", methods=["GET"])
-def verify():
-    token_sent = request.args.get("hub.verify_token")
-    if token_sent == VERIFY_TOKEN:
-        return request.args.get("hub.challenge")
-    return "Invalid verification token", 403
+VERIFY_TOKEN = "bachka_token"
 
-@app.route("/webhook", methods=["POST"])
+@app.route("/", methods=["GET"])
+def home():
+    return "Server is running!", 200
+
+@app.route("/webhook", methods=["GET", "POST"])
 def webhook():
-    data = request.json
-    print("Message received:", data)  # Консол дээр ирсэн мессежийг харуулна
-    return "ok", 200
+    if request.method == "GET":
+        token = request.args.get("hub.verify_token")
+        challenge = request.args.get("hub.challenge")
+        if token == VERIFY_TOKEN:
+            return challenge, 200
+        else:
+            return "Invalid verification token", 403
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    if request.method == "POST":
+        data = request.json
+        print("Message received:", data)
+        return "EVENT_RECEIVED", 200

@@ -176,17 +176,30 @@ def send_gift_products2(recipient_id):
     message = {"attachment":{"type":"template","payload":{"template_type":"generic","elements":elements}}}
     send_message(recipient_id, message)
 
-
-# ---------------- Webhook ----------------
+# ---------------- Send message helper ----------------
 def send_message(recipient_id, message):
     print(">>> Sending message to", recipient_id)   # debug log
-    print(message)                                  # debug log
+    print(message)   # debug log
     params = {"access_token": PAGE_ACCESS_TOKEN}
     headers = {"Content-Type": "application/json"}
     data = {"recipient": {"id": recipient_id}, "message": message}
     r = requests.post(FB_URL, params=params, headers=headers, json=data)
     print(">>> Facebook API response:", r.status_code, r.text)   # debug log
 
+
+# ---------------- Webhook ----------------
+@app.route("/", methods=["GET"])
+def home():
+    return "Server is running!", 200
+
+@app.route("/webhook", methods=["GET","POST"])
+def webhook():
+    if request.method == "GET":
+        token = request.args.get("hub.verify_token")
+        challenge = request.args.get("hub.challenge")
+        if token == VERIFY_TOKEN:
+            return challenge, 200
+        return "Invalid verification token", 403
 
     elif request.method == "POST":
         data = request.json

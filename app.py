@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 VERIFY_TOKEN = "bachka_token"
-PAGE_ACCESS_TOKEN = "EAAZAmrUlytb0BPYg7ucghGA1pNTdrluj3QLKm924bF8yk7DMC02H9rWDRWD55Vl2aQNFNSec5iF7Y7XyPRXYnx58r1PU5gNJgCbejNy2XhWZBJYRa5eIZCFZA8TD4SytUum2bfAidLdgMmCdWZAJk2rGZBm11HZAMi20QqZAv4ksvDRE52Duhpe8tHsRK2MXVtK55uZBVJpqF"
+PAGE_ACCESS_TOKEN = "EAAZAmrUlytb0BPkrqPxgZAJZCaJYRmNq8W2ZBUfZAzQB5GKl9Km89SORBiu7EjqGUz4HQmcZB6UtjynzxEaisrgYQCUqoZAQKPSpVTYkXBkkBsuAagmJjAb1qLOQZCg0AqtTqaZBKY7twGGBoufrwc5uJy82F702wsS2erJQvEZCJfcOJ0mZBj0QForYEKRK8ioVxvkgWMOZBsQypeQhpkAKnOMKPjplkECN7T0rgBgAd4seOso7ZBo7u"
 
 FB_URL = "https://graph.facebook.com/v23.0/me/messages"
 
@@ -178,18 +178,15 @@ def send_gift_products2(recipient_id):
 
 
 # ---------------- Webhook ----------------
-@app.route("/", methods=["GET"])
-def home():
-    return "Server is running!", 200
+def send_message(recipient_id, message):
+    print(">>> Sending message to", recipient_id)   # debug log
+    print(message)                                  # debug log
+    params = {"access_token": PAGE_ACCESS_TOKEN}
+    headers = {"Content-Type": "application/json"}
+    data = {"recipient": {"id": recipient_id}, "message": message}
+    r = requests.post(FB_URL, params=params, headers=headers, json=data)
+    print(">>> Facebook API response:", r.status_code, r.text)   # debug log
 
-@app.route("/webhook", methods=["GET","POST"])
-def webhook():
-    if request.method == "GET":
-        token = request.args.get("hub.verify_token")
-        challenge = request.args.get("hub.challenge")
-        if token == VERIFY_TOKEN:
-            return challenge, 200
-        return "Invalid verification token", 403
 
     elif request.method == "POST":
         data = request.json

@@ -222,4 +222,7 @@ def webhook():
                                 send_gift_products2(sender_id)
                             elif payload == "GIFT_PRODUCTS_3":
                                 send_gift_products3(sender_id)
+                            elif payload == "GET_STARTED":
+                                send_welcome_message(sender_id)
+
         return "EVENT_RECEIVED", 200

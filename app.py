@@ -3,8 +3,9 @@ import requests
 
 app = Flask(__name__)
 
-VERIFY_TOKEN = "bachka_token"
-PAGE_ACCESS_TOKEN = "EAAZAmrUlytb0BPkrqPxgZAJZCaJYRmNq8W2ZBUfZAzQB5GKl9Km89SORBiu7EjqGUz4HQmcZB6UtjynzxEaisrgYQCUqoZAQKPSpVTYkXBkkBsuAagmJjAb1qLOQZCg0AqtTqaZBKY7twGGBoufrwc5uJy82F702wsS2erJQvEZCJfcOJ0mZBj0QForYEKRK8ioVxvkgWMOZBsQypeQhpkAKnOMKPjplkECN7T0rgBgAd4seOso7ZBo7u"
+PAGE_ACCESS_TOKEN = os.environ.get("PAGE_ACCESS_TOKEN")
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
+PAGE_ID = os.environ.get("PAGE_ID")
 
 FB_URL = "https://graph.facebook.com/v23.0/me/messages"
 
@@ -12,7 +13,8 @@ def send_message(recipient_id, message):
     params = {"access_token": PAGE_ACCESS_TOKEN}
     headers = {"Content-Type": "application/json"}
     data = {"recipient": {"id": recipient_id}, "message": message}
-    requests.post(FB_URL, params=params, headers=headers, json=data)
+    r = requests.post(FB_URL, params=params, headers=headers, json=data)
+    print(">>> Facebook API response:", r.status_code, r.text)
 
 # ---------------- Эхлэх мэндчилгээ ----------------
 def send_welcome_message(recipient_id):

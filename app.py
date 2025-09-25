@@ -1,6 +1,6 @@
 from flask import Flask, request
 import requests
-
+import os 
 app = Flask(__name__)
 
 PAGE_ACCESS_TOKEN = os.environ.get("PAGE_ACCESS_TOKEN")

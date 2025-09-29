@@ -1,14 +1,18 @@
 from flask import Flask, request
 import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()  # .env файл унших
 
 app = Flask(__name__)
 
 # ---------------- Config ----------------
-PAGE_ACCESS_TOKEN = os.environ.get("PAGE_ACCESS_TOKEN")
-VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "backhka_token")
-
+PAGE_ACCESS_TOKEN = os.getenv("PAGE_ACCESS_TOKEN")
+VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 FB_URL = "https://graph.facebook.com/v23.0/me/messages"
+
+
 
 
 # ---------------- Helper ----------------

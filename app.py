@@ -238,11 +238,16 @@ def home():
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
     if request.method == "GET":
+        mode = request.args.get("hub.mode")
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
-        if token == VERIFY_TOKEN:
+
+        if mode == "subscribe" and token == VERIFY_TOKEN:
+            print("Webhook verified!")
             return challenge, 200
-        return "Invalid verification token", 403
+        else:
+            return "Invalid verification token", 403
+
 
     if request.method == "POST":
         data = request.json

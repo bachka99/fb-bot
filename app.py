@@ -1,16 +1,17 @@
 from flask import Flask, request
-import requests
 import os
+import requests
 
 app = Flask(__name__)
 
+# ---------------- Config ----------------
 PAGE_ACCESS_TOKEN = os.environ.get("PAGE_ACCESS_TOKEN")
-VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "backhka_token")
 
 FB_URL = "https://graph.facebook.com/v23.0/me/messages"
 
 
-# ---------------- Send message helper ----------------
+# ---------------- Helper ----------------
 def send_message(recipient_id, message):
     print(">>> Sending message to", recipient_id)
     params = {"access_token": PAGE_ACCESS_TOKEN}
@@ -243,8 +244,10 @@ def webhook():
             return challenge, 200
         return "Invalid verification token", 403
 
-    elif request.method == "POST":
+    if request.method == "POST":
         data = request.json
+        print("Webhook received:", data)  # Debug log
+
         if "entry" in data:
             for entry in data["entry"]:
                 if "messaging" in entry:

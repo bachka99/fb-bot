@@ -286,3 +286,8 @@ def webhook():
                                 send_welcome_message(sender_id)
 
         return "EVENT_RECEIVED", 200
+
+
+# ---------------- Run app ----------------
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

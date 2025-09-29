@@ -248,8 +248,7 @@ def webhook():
         else:
             return "Invalid verification token", 403
 
-
-    if request.method == "POST":
+    elif request.method == "POST":
         data = request.json
         print("Webhook received:", data)  # Debug log
 
